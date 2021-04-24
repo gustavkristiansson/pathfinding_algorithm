@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PathFindingGrid : MonoBehaviour {
+
+    public bool displayGridGizmos;
     
     public LayerMask unwalkableMask;
     public Vector2 gridWorldSize;
@@ -12,11 +14,17 @@ public class PathFindingGrid : MonoBehaviour {
     float nodeDiameter;
     int gridSizeX, gridSizeY;
 
-    void Start() {
+    void Awake() {
         nodeDiameter = nodeRadius * 2;
         gridSizeX = Mathf.RoundToInt(gridWorldSize.x / nodeDiameter);
         gridSizeY = Mathf.RoundToInt(gridWorldSize.y / nodeDiameter);
         CreateGrid();
+    }
+
+    public int MaxSize {
+        get {
+            return gridSizeX * gridSizeY;
+        }
     }
     
     void CreateGrid() {
@@ -68,7 +76,7 @@ public class PathFindingGrid : MonoBehaviour {
     void OnDrawGizmos() {
         Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, 1, gridWorldSize.y));
 
-        if(grid != null) { 
+        if(grid != null && displayGridGizmos) { 
             foreach(Node n in grid) {
                 Gizmos.color = (n.walkable)? Color.white:Color.red;
                 Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter-.1f));
